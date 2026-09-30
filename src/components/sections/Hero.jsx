@@ -105,7 +105,7 @@ const Hero = () => {
                         </div>
 
                         <div className="flex gap-6 hero-cta-group">
-                            <a id="hero-btn-cv" href="https://drive.google.com/file/d/15tyIpHbM3vfBsw4VlT5B0ZL8oS73VTM1/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="btn-cv">
+                            <a id="hero-btn-cv" href="https://drive.google.com/file/d/1q0Tu0HmOWysna3LHmAVTnSQxzF173xSS/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="btn-cv">
                                 <i className="fas fa-file-download"></i>
                                 <span>Download CV</span>
                             </a>
