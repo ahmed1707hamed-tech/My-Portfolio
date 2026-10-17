@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import ProjectModal from '../ui/ProjectModal';
@@ -31,6 +32,31 @@ const normalizeProject = (project, index) => ({
   technologies: normalizeProjectTechnologies(project),
 });
 
+// DevSecOps project
+const devSecOpsProject = normalizeProject({
+  id: 'devsecops-project',
+  title: 'End-to-End DevSecOps Pipeline',
+  description:
+    'Implemented an end-to-end DevSecOps pipeline integrating CI/CD automation, security scanning, Docker containerization, Kubernetes deployment, GitOps with Argo CD, and monitoring using Prometheus and Grafana.',
+  image: '/assets/projects/Neon%20DevSecOps%20Kubernetes%20Pipeline.png',
+  repo: 'https://github.com/ahmed1707hamed-tech/devsecOps_project',
+  technologies: [
+    'Python',
+    'FastAPI',
+    'Docker',
+    'Kubernetes',
+    'GitHub Actions',
+    'Trivy',
+    'Gitleaks',
+    'Helm',
+    'Argo CD',
+    'Prometheus',
+    'Grafana',
+    'Terraform',
+    'Ansible',
+  ],
+}, 'devsecops-project');
+
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -38,7 +64,10 @@ const Projects = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const projectsQuery = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+    const projectsQuery = query(
+      collection(db, 'projects'),
+      orderBy('createdAt', 'desc')
+    );
 
     const unsubscribe = onSnapshot(
       projectsQuery,
@@ -79,15 +108,40 @@ const Projects = () => {
   }, []);
 
   const visibleProjects = useMemo(() => {
-    if (projects.length > 0) {
-      return projects;
-    }
-
     if (loading) {
       return [];
     }
 
-    return fallbackProjects.map(normalizeProject);
+    const sourceProjects = projects.length > 0
+      ? projects
+      : fallbackProjects.map(normalizeProject);
+
+    // Check whether the DevSecOps project already exists.
+    const alreadyExists = sourceProjects.some(
+      (project) =>
+        getProjectRepo(project).toLowerCase() ===
+        devSecOpsProject.repo.toLowerCase()
+    );
+
+    // Always use the local image for this project.
+    const updatedProjects = sourceProjects.map((project) => {
+      if (
+        getProjectRepo(project).toLowerCase() ===
+        devSecOpsProject.repo.toLowerCase()
+      ) {
+        return {
+          ...project,
+          image: devSecOpsProject.image,
+        };
+      }
+
+      return project;
+    });
+
+    // Add the project only if it does not already exist.
+    return alreadyExists
+      ? updatedProjects
+      : [...updatedProjects, devSecOpsProject];
   }, [loading, projects]);
 
   const handleOpenProject = useCallback((project) => {
@@ -110,12 +164,16 @@ const Projects = () => {
   }, [selectedProject, visibleProjects]);
 
   return (
-    <section id="projects" className="section relative bg-[#020617] py-20 text-white">
+    <section
+      id="projects"
+      className="section relative bg-[#020617] py-20 text-white"
+    >
       <div className="container relative z-10 mx-auto px-8">
         <div className="section-header animate-up mb-16 text-center">
           <span className="section-subtitle mb-2 block font-mono text-sm font-bold uppercase tracking-widest text-cyan-400">
             [ Projects_Database ]
           </span>
+
           <h2 className="section-title mb-4 text-4xl font-black tracking-tight text-white drop-shadow-md md:text-5xl">
             Featured Systems
           </h2>
@@ -124,7 +182,10 @@ const Projects = () => {
         <div className="projects-grid grid grid-cols-1 gap-8 animate-up md:grid-cols-2 lg:grid-cols-3">
           {loading ? (
             <div className="col-span-full flex flex-col items-center justify-center py-20 opacity-70">
-              <span className="mb-4 animate-pulse text-4xl text-cyan-500">...</span>
+              <span className="mb-4 animate-pulse text-4xl text-cyan-500">
+                ...
+              </span>
+
               <p className="font-mono text-sm uppercase tracking-widest text-cyan-400">
                 Fetching deployments...
               </p>
@@ -147,7 +208,10 @@ const Projects = () => {
         </div>
       </div>
 
-      <ProjectModal project={activeProject} onClose={handleCloseProject} />
+      <ProjectModal
+        project={activeProject}
+        onClose={handleCloseProject}
+      />
     </section>
   );
 };
