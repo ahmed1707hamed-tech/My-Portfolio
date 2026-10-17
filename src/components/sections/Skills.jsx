@@ -1,8 +1,10 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 const Skills = () => {
     const sectionRef = useRef(null);
@@ -136,18 +138,46 @@ const Skills = () => {
         <section id="skills" className="section" ref={sectionRef}>
             <div className="container mx-auto px-8">
                 <div className="section-header animate-up text-center mb-16">
-                    <span className="section-subtitle text-[var(--clr-accent)] font-mono uppercase tracking-widest text-sm mb-2 block">Expertise</span>
-                    <h2 className="section-title text-4xl md:text-5xl font-black mb-4">Skills & Technologies</h2>
-                    <p className="section-desc text-[var(--clr-text-dim)] max-w-2xl mx-auto">A comprehensive toolkit for building and managing modern cloud infrastructure.</p>
+                    <span className="section-subtitle text-[var(--clr-accent)] font-mono uppercase tracking-widest text-sm mb-2 block">
+                        Expertise
+                    </span>
+                    <h2 className="section-title text-4xl md:text-5xl font-black mb-4">
+                        Skills & Technologies
+                    </h2>
+                    <p className="section-desc text-[var(--clr-text-dim)] max-w-2xl mx-auto">
+                        A comprehensive toolkit for building and managing modern cloud infrastructure.
+                    </p>
                 </div>
 
                 <div className="skills-circular-row flex flex-wrap justify-center gap-12 mb-20">
                     {circularSkills.map((skill, idx) => (
-                        <div key={idx} className="circular-skill-item group" data-percent={skill.percent}>
+                        <div
+                            key={idx}
+                            className="circular-skill-item group"
+                            data-percent={skill.percent}
+                        >
                             <div className="circle-box relative w-[120px] h-[120px] flex items-center justify-center">
                                 <svg className="progress-ring rotate-[-90deg]" width="120" height="120">
-                                    <circle className="progress-ring-bg" cx="60" cy="60" r="54" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                                    <circle className="progress-ring-circle transition-all duration-1000 ease-out" cx="60" cy="60" r="54" fill="transparent" stroke="var(--clr-accent)" strokeWidth="8" strokeDasharray="339.292" strokeDashoffset="339.292" />
+                                    <circle
+                                        className="progress-ring-bg"
+                                        cx="60"
+                                        cy="60"
+                                        r="54"
+                                        fill="transparent"
+                                        stroke="rgba(255,255,255,0.05)"
+                                        strokeWidth="8"
+                                    />
+                                    <circle
+                                        className="progress-ring-circle transition-all duration-1000 ease-out"
+                                        cx="60"
+                                        cy="60"
+                                        r="54"
+                                        fill="transparent"
+                                        stroke="var(--clr-accent)"
+                                        strokeWidth="8"
+                                        strokeDasharray="339.292"
+                                        strokeDashoffset="339.292"
+                                    />
                                 </svg>
                                 <div className="skill-icon absolute text-3xl text-[var(--clr-accent)] transition-transform duration-300 group-hover:scale-125">
                                     <i className={skill.icon}></i>
@@ -161,14 +191,53 @@ const Skills = () => {
                     ))}
                 </div>
 
-                <div className="skills-swiper-container pb-12 pt-4">
+                <div className="skills-swiper-container pb-12 pt-4 relative">
+
+                    {/* Previous skills button */}
+                    <button
+                        type="button"
+                        className="skills-prev absolute left-0 top-1/2 -translate-y-1/2 z-10
+                        w-11 h-11 rounded-full bg-[var(--clr-card-bg)]
+                        border border-[var(--clr-card-border)]
+                        text-[var(--clr-accent)] hover:bg-[var(--clr-accent)]
+                        hover:text-black transition-all duration-300
+                        flex items-center justify-center cursor-pointer"
+                        aria-label="Previous skills"
+                    >
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
+
+                    {/* Next skills button */}
+                    <button
+                        type="button"
+                        className="skills-next absolute right-0 top-1/2 -translate-y-1/2 z-10
+                        w-11 h-11 rounded-full bg-[var(--clr-card-bg)]
+                        border border-[var(--clr-card-border)]
+                        text-[var(--clr-accent)] hover:bg-[var(--clr-accent)]
+                        hover:text-black transition-all duration-300
+                        flex items-center justify-center cursor-pointer"
+                        aria-label="Next skills"
+                    >
+                        <i className="fas fa-chevron-right"></i>
+                    </button>
+
                     <Swiper
-                        modules={[Pagination, Autoplay]}
+                        modules={[Pagination, Autoplay, Navigation]}
                         slidesPerView={1}
                         spaceBetween={20}
                         loop={true}
-                        pagination={{ clickable: true, el: '.skills-pagination' }}
-                        autoplay={{ delay: 3500, disableOnInteraction: false }}
+                        navigation={{
+                            prevEl: '.skills-prev',
+                            nextEl: '.skills-next'
+                        }}
+                        pagination={{
+                            clickable: true,
+                            el: '.skills-pagination'
+                        }}
+                        autoplay={{
+                            delay: 3500,
+                            disableOnInteraction: false
+                        }}
                         breakpoints={{
                             768: { slidesPerView: 2, spaceBetween: 30 },
                             1024: { slidesPerView: 3, spaceBetween: 40 }
@@ -184,20 +253,31 @@ const Skills = () => {
                                         </div>
                                         <div>
                                             <h3 className="skill-card-title text-xl font-bold">{card.title}</h3>
-                                            <p className="skill-card-subtitle text-xs text-[var(--clr-text-dim)] uppercase tracking-wider">{card.count}</p>
+                                            <p className="skill-card-subtitle text-xs text-[var(--clr-text-dim)] uppercase tracking-wider">
+                                                {card.count}
+                                            </p>
                                         </div>
                                     </div>
+
                                     <div className="skill-card-body space-y-4">
                                         {card.metrics.map((m, midx) => (
                                             <div key={midx} className="skill-item">
                                                 <div className="skill-metric flex justify-between text-sm mb-1">
-                                                    <span className="skill-metric-label text-[var(--clr-text-dim)]">{m.label}</span>
-                                                    <span className="skill-metric-percent font-bold">{m.percent}%</span>
+                                                    <span className="skill-metric-label text-[var(--clr-text-dim)]">
+                                                        {m.label}
+                                                    </span>
+                                                    <span className="skill-metric-percent font-bold">
+                                                        {m.percent}%
+                                                    </span>
                                                 </div>
+
                                                 <div className="skill-progress h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-                                                    <div 
-                                                        className="skill-progress-bar h-full bg-[var(--clr-accent)] transition-all duration-1000 ease-in-out" 
-                                                        style={{ width: '0%', '--target-width': `${m.percent}%` }}
+                                                    <div
+                                                        className="skill-progress-bar h-full bg-[var(--clr-accent)] transition-all duration-1000 ease-in-out"
+                                                        style={{
+                                                            width: '0%',
+                                                            '--target-width': `${m.percent}%`
+                                                        }}
                                                         ref={(el) => {
                                                             if (el) {
                                                                 const observer = new IntersectionObserver((entries) => {
@@ -218,6 +298,7 @@ const Skills = () => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+
                     <div className="skills-pagination mt-8 flex justify-center"></div>
                 </div>
             </div>
@@ -226,19 +307,50 @@ const Skills = () => {
                 .circular-skill-item .circle-box {
                     transition: transform 0.3s ease;
                 }
+
                 .circular-skill-item:hover .circle-box {
                     transform: scale(1.05);
                 }
+
+                .skills-swiper-container {
+                    padding-left: 55px;
+                    padding-right: 55px;
+                }
+
+                .skills-prev,
+                .skills-next {
+                    box-shadow: 0 0 15px rgba(0, 210, 255, 0.08);
+                }
+
+                .skills-prev:hover,
+                .skills-next:hover {
+                    box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+                }
+
                 .skills-pagination .swiper-pagination-bullet {
                     background: var(--clr-text-dim);
                     opacity: 0.3;
                     transition: all 0.3s ease;
                 }
+
                 .skills-pagination .swiper-pagination-bullet-active {
                     background: var(--clr-accent);
                     opacity: 1;
                     width: 25px;
                     border-radius: 5px;
+                }
+
+                @media (max-width: 640px) {
+                    .skills-swiper-container {
+                        padding-left: 38px;
+                        padding-right: 38px;
+                    }
+
+                    .skills-prev,
+                    .skills-next {
+                        width: 32px;
+                        height: 32px;
+                    }
                 }
             ` }} />
         </section>
